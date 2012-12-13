@@ -5,12 +5,19 @@ import (
 )
 
 type Epub struct {
-	file *zip.ReadCloser
+	file     *zip.ReadCloser
+	Metadata Meta
 }
 
-func Open(path string) (e Epub, err error) {
+func Open(path string) (e *Epub, err error) {
+	e = new(Epub)
 	e.file, err = zip.OpenReader(path)
-	return e, err
+	if err != nil {
+		return
+	}
+
+	e.Metadata, err = parseMetadata(e.file)
+	return
 }
 
 func (e Epub) Close() {
