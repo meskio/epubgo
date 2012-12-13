@@ -24,7 +24,7 @@ type rootfile struct {
 	Path string `xml:"full-path,attr"`
 }
 type container_xml struct {
-	// only support for one rootfile, can it be more than one?
+	// FIXME: only support for one rootfile, can it be more than one?
 	Rootfile rootfile `xml:"rootfiles>rootfile"`
 }
 
