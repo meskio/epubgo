@@ -7,8 +7,31 @@ import (
 	"io"
 )
 
+/* TODO for full support on metadata: 
+ *   - identifier: id & opf:scheme
+ *   - creator: opf:file-as="King, Martin Luther Jr." opf:role="aut"
+ *   - contributor: opf:file-as & opf:role
+ *   - date: opf:event & convert to date type
+ */
+
+// Metadata of the epub
+// TODO: the public struct should not have the `xml`
 type Meta struct {
-	Title string `xml:"metadata>title"`
+	Title       []string `xml:"metadata>title"`
+	Language    []string `xml:"metadata>language"`
+	Identifier  []string `xml:"metadata>identifier"`
+	Creator     []string `xml:"metadata>creator"`
+	Subject     []string `xml:"metadata>subject"`
+	Description []string `xml:"metadata>description"`
+	Publisher   []string `xml:"metadata>publisher"`
+	Contributor []string `xml:"metadata>contributor"`
+	Date        []string `xml:"metadata>date"`
+	Type        []string `xml:"metadata>type"`
+	Format      []string `xml:"metadata>format"`
+	Source      []string `xml:"metadata>source"`
+	Relation    []string `xml:"metadata>relation"`
+	Coverage    []string `xml:"metadata>coverage"`
+	Rights      []string `xml:"metadata>rights"`
 }
 
 func openFile(file *zip.ReadCloser, path string) (io.ReadCloser, error) {
