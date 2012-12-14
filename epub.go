@@ -4,11 +4,6 @@ import (
 	"archive/zip"
 )
 
-type Data struct {
-	Content string
-	Attr    map[string]string
-}
-type MData map[string][]Data
 type Epub struct {
 	file     *zip.ReadCloser
 	Metadata MData
