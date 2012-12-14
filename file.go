@@ -1,3 +1,7 @@
+// Copyright 2012 Ruben Pollan <meskio@sindominio.net>
+// Use of this source code is governed by a LGPL licence
+// version 3 or later that can be found in the LICENSE file.
+
 package epub
 
 import (
