@@ -23,25 +23,24 @@ func TestOpenClose(t *testing.T) {
 
 func TestMetadata(t *testing.T) {
 	f, _ := Open(book_path)
+	defer f.Close()
 
-	if f.Metadata.Title[0] != book_title {
-		t.Errorf("Metadata title '%v', the expected was '%v'", f.Metadata.Title, book_title)
+	if f.Metadata["title"][0].Content != book_title {
+		t.Errorf("Metadata title '%v', the expected was '%v'", f.Metadata["title"], book_title)
 	}
-	if f.Metadata.Language[0] != book_lang {
-		t.Errorf("Metadata language '%v', the expected was '%v'", f.Metadata.Language, book_lang)
+	if f.Metadata["language"][0].Content != book_lang {
+		t.Errorf("Metadata language '%v', the expected was '%v'", f.Metadata["language"], book_lang)
 	}
-	if f.Metadata.Identifier[0] != book_identifier {
-		t.Errorf("Metadata identifier '%v', the expected was '%v'", f.Metadata.Identifier, book_identifier)
+	if f.Metadata["identifier"][0].Content != book_identifier {
+		t.Errorf("Metadata identifier '%v', the expected was '%v'", f.Metadata["identifier"], book_identifier)
 	}
-	if f.Metadata.Creator[0] != book_creator {
-		t.Errorf("Metadata creator '%v', the expected was '%v'", f.Metadata.Creator, book_creator)
+	if f.Metadata["creator"][0].Content != book_creator {
+		t.Errorf("Metadata creator '%v', the expected was '%v'", f.Metadata["creator"], book_creator)
 	}
-	if f.Metadata.Subject[0] != book_subject {
-		t.Errorf("Metadata subject '%v', the expected was '%v'", f.Metadata.Subject, book_subject)
+	if f.Metadata["subject"][0].Content != book_subject {
+		t.Errorf("Metadata subject '%v', the expected was '%v'", f.Metadata["subject"], book_subject)
 	}
-	if f.Metadata.Rights[0] != book_rights {
-		t.Errorf("Metadata rights '%v', the expected was '%v'", f.Metadata.Rights, book_rights)
+	if f.Metadata["rights"][0].Content != book_rights {
+		t.Errorf("Metadata rights '%v', the expected was '%v'", f.Metadata["rights"], book_rights)
 	}
-
-	f.Close()
 }
