@@ -8,11 +8,13 @@ import (
 	"archive/zip"
 )
 
+// Epub holds all the data of the ebook
 type Epub struct {
 	file     *zip.ReadCloser
 	Metadata MData
 }
 
+// Open an existing epub
 func Open(path string) (e *Epub, err error) {
 	e = new(Epub)
 	e.file, err = zip.OpenReader(path)
@@ -24,6 +26,7 @@ func Open(path string) (e *Epub, err error) {
 	return
 }
 
+// Close the epub file
 func (e Epub) Close() {
 	e.file.Close()
 }
