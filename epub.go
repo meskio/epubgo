@@ -6,12 +6,19 @@ package epub
 
 import (
 	"archive/zip"
+	"errors"
 )
+
+type element struct {
+	content string
+	attr    map[string]string
+}
+type mdata map[string][]element
 
 // Epub holds all the data of the ebook
 type Epub struct {
 	file     *zip.ReadCloser
-	Metadata MData
+	metadata mdata
 }
 
 // Open an existing epub
@@ -22,7 +29,7 @@ func Open(path string) (e *Epub, err error) {
 		return
 	}
 
-	e.Metadata, err = parseMetadata(e.file)
+	e.metadata, err = parseMetadata(e.file)
 	return
 }
 
@@ -30,3 +37,25 @@ func Open(path string) (e *Epub, err error) {
 func (e Epub) Close() {
 	e.file.Close()
 }
+
+func (e Epub) Metadata(field string) ([]string, error) {
+	elem, ok := e.metadata[field]
+	if ok {
+		cont := make([]string, len(elem))
+		for i, e := range elem {
+			cont[i] = e.content
+		}
+		return cont, nil
+	}
+
+	return nil, errors.New("Field " + field + " don't exists")
+}
+
+/*func (m MData) Len(field string) int {
+	elem, ok := m[field]
+	if ok {
+		return len(elem)
+	}
+
+	return 0
+}*/

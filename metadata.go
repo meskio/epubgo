@@ -11,12 +11,6 @@ import (
 	"strings"
 )
 
-type Data struct {
-	Content string
-	Attr    map[string]string
-}
-type MData map[string][]Data
-
 // TODO convert date to date type?
 type identifier struct {
 	Data   string `xml:",chardata"`
@@ -50,8 +44,8 @@ type meta struct {
 	Rights      []string     `xml:"metadata>rights"`
 }
 
-func toMData(m meta) MData {
-	metadata := make(MData)
+func toMData(m meta) mdata {
+	metadata := make(mdata)
 	v := reflect.ValueOf(m)
 	typeOf := v.Type()
 	for i := 0; i < v.NumField(); i++ {
@@ -61,27 +55,27 @@ func toMData(m meta) MData {
 		}
 
 		fieldName := strings.ToLower(typeOf.Field(i).Name)
-		data := make([]Data, field.Len())
+		data := make([]element, field.Len())
 		for j := 0; j < field.Len(); j++ {
-			data[j].Attr = make(map[string]string)
+			data[j].attr = make(map[string]string)
 			elem := field.Index(j).Interface()
 			switch elem.(type) {
 			case string:
-				data[j].Content, _ = elem.(string)
+				data[j].content, _ = elem.(string)
 			case identifier:
 				ident, _ := elem.(identifier)
-				data[j].Content = ident.Data
-				data[j].Attr["id"] = ident.Id
-				data[j].Attr["scheme"] = ident.Scheme
+				data[j].content = ident.Data
+				data[j].attr["id"] = ident.Id
+				data[j].attr["scheme"] = ident.Scheme
 			case author:
 				auth, _ := elem.(author)
-				data[j].Content = auth.Data
-				data[j].Attr["file-as"] = auth.FileAs
-				data[j].Attr["role"] = auth.Role
+				data[j].content = auth.Data
+				data[j].attr["file-as"] = auth.FileAs
+				data[j].attr["role"] = auth.Role
 			case date:
 				d, _ := elem.(date)
-				data[j].Content = d.Data
-				data[j].Attr["event"] = d.Event
+				data[j].content = d.Data
+				data[j].attr["event"] = d.Event
 			}
 		}
 		metadata[fieldName] = data
@@ -89,7 +83,7 @@ func toMData(m meta) MData {
 	return metadata
 }
 
-func parseMetadata(file *zip.ReadCloser) (metadata MData, err error) {
+func parseMetadata(file *zip.ReadCloser) (metadata mdata, err error) {
 	path, err := contentPath(file)
 	if err != nil {
 		return
