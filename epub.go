@@ -51,11 +51,15 @@ func (e Epub) Metadata(field string) ([]string, error) {
 	return nil, errors.New("Field " + field + " don't exists")
 }
 
-/*func (m MData) Len(field string) int {
-	elem, ok := m[field]
+func (e Epub) MetadataAttr(field string) ([]map[string]string, error) {
+	elem, ok := e.metadata[field]
 	if ok {
-		return len(elem)
+		attr := make([]map[string]string, len(elem))
+		for i, e := range elem {
+			attr[i] = e.attr
+		}
+		return attr, nil
 	}
 
-	return 0
-}*/
+	return nil, errors.New("Field " + field + " don't exists")
+}
