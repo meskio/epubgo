@@ -11,7 +11,8 @@ A simple example of usage:
 		log.Panic(err)
 	}
 	difer book.Close()
-	fmt.Println(book.Metadata["title"][0].Content)
+	title, _ := book.Metadata("title")
+	fmt.Println(title[0])
 
 */
 package epub

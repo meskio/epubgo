@@ -38,6 +38,11 @@ func (e Epub) Close() {
 	e.file.Close()
 }
 
+// Get the values of a metadata field
+//
+// The valid field names are:
+//    Title, Language, Identifier, Creator, Subject, Description, Publisher, 
+//    Contributor, Date, Type, Format, Source, Relation, Coverage, Rights
 func (e Epub) Metadata(field string) ([]string, error) {
 	elem, ok := e.metadata[field]
 	if ok {
@@ -51,6 +56,9 @@ func (e Epub) Metadata(field string) ([]string, error) {
 	return nil, errors.New("Field " + field + " don't exists")
 }
 
+// Get the metadata attributes
+//
+// The array  has the fields on the smae order than the Metadata method
 func (e Epub) MetadataAttr(field string) ([]map[string]string, error) {
 	elem, ok := e.metadata[field]
 	if ok {
