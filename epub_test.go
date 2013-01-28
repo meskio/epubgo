@@ -14,6 +14,7 @@ const (
 	book_creator      = "Mark Twain"
 	book_subject      = "Dogs -- Fiction"
 	book_rights       = "Public domain in the USA."
+	len_metadafields  = 8
 	identifier_scheme = "URI"
 	creator_file_as   = "Twain, Mark"
 )
@@ -48,6 +49,26 @@ func TestMetadata(t *testing.T) {
 	}
 	if rights, _ := f.Metadata("rights"); rights[0] != book_rights {
 		t.Errorf("Metadata rights '%v', the expected was '%v'", rights[0], book_rights)
+	}
+}
+
+func TestMetadataFields(t *testing.T) {
+	f, _ := Open(book_path)
+	defer f.Close()
+
+	fields := f.MetadataFields()
+	if len(fields) != len_metadafields {
+		t.Errorf("len(MetadataFields()) should be %v, but was %v", len_metadafields, len(fields))
+	}
+
+	isTitle := false
+	for _, field := range fields {
+		if field == "title" {
+			isTitle = true
+		}
+	}
+	if !isTitle {
+		t.Errorf("title is not in the metadata fields")
 	}
 }
 

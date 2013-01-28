@@ -56,6 +56,17 @@ func (e Epub) Metadata(field string) ([]string, error) {
 	return nil, errors.New("Field " + field + " don't exists")
 }
 
+// Get the list of metadata fields
+func (e Epub) MetadataFields() []string {
+	fields := make([]string, len(e.metadata))
+	i := 0
+	for k, _ := range e.metadata {
+		fields[i] = k
+		i++
+	}
+	return fields
+}
+
 // Get the metadata attributes
 //
 // The array  has the fields on the smae order than the Metadata method
