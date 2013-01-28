@@ -15,4 +15,4 @@ A simple example of usage:
 	fmt.Println(title[0])
 
 */
-package epub
+package epubgo
