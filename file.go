@@ -11,7 +11,7 @@ import (
 	"io"
 )
 
-func openFile(file *zip.ReadCloser, path string) (io.ReadCloser, error) {
+func openFile(file *zip.Reader, path string) (io.ReadCloser, error) {
 	for _, f := range file.File {
 		if f.Name == path {
 			return f.Open()
@@ -28,7 +28,7 @@ type container_xml struct {
 	Rootfile rootfile `xml:"rootfiles>rootfile"`
 }
 
-func contentPath(file *zip.ReadCloser) (string, error) {
+func contentPath(file *zip.Reader) (string, error) {
 	f, err := openFile(file, "META-INF/container.xml")
 	if err != nil {
 		return "", err

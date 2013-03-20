@@ -7,6 +7,8 @@ package epubgo
 import (
 	"archive/zip"
 	"errors"
+	"io"
+	"os"
 )
 
 type element struct {
@@ -17,25 +19,48 @@ type mdata map[string][]element
 
 // Epub holds all the data of the ebook
 type Epub struct {
-	file     *zip.ReadCloser
+	file     *os.File
+	zip      *zip.Reader
 	metadata mdata
 }
 
 // Open an existing epub
 func Open(path string) (e *Epub, err error) {
 	e = new(Epub)
-	e.file, err = zip.OpenReader(path)
+	e.file, err = os.Open(path)
 	if err != nil {
 		return
 	}
-
-	e.metadata, err = parseMetadata(e.file)
+	fileInfo, err := e.file.Stat()
+	if err != nil {
+		return
+	}
+	err = e.load(e.file, fileInfo.Size())
 	return
+}
+
+// Load an eupb from an io.ReaderAt
+func Load(r io.ReaderAt, size int64) (e *Epub, err error) {
+	e = new(Epub)
+	e.file = nil
+	err = e.load(r, size)
+	return
+}
+
+func (e *Epub) load(r io.ReaderAt, size int64) (err error) {
+	e.zip, err = zip.NewReader(r, size)
+	if err != nil {
+		return
+	}
+	e.metadata, err = parseMetadata(e.zip)
+	return err
 }
 
 // Close the epub file
 func (e Epub) Close() {
-	e.file.Close()
+	if e.file != nil {
+		e.file.Close()
+	}
 }
 
 // Get the values of a metadata field

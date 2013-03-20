@@ -6,6 +6,10 @@ package epubgo
 
 import "testing"
 
+import (
+	"os"
+)
+
 const (
 	book_path         = "testdata/a_dogs_tale.epub"
 	book_title        = "A Dog's Tale"
@@ -21,6 +25,17 @@ const (
 
 func TestOpenClose(t *testing.T) {
 	f, err := Open(book_path)
+	if err != nil {
+		t.Errorf("Open(%v) return an error: %v", book_path, err)
+	}
+
+	f.Close()
+}
+
+func TestLoad(t *testing.T) {
+	file, _ := os.Open(book_path)
+	fileInfo, _ := file.Stat()
+	f, err := Load(file, fileInfo.Size())
 	if err != nil {
 		t.Errorf("Open(%v) return an error: %v", book_path, err)
 	}

@@ -83,7 +83,7 @@ func toMData(m meta) mdata {
 	return metadata
 }
 
-func parseMetadata(file *zip.ReadCloser) (metadata mdata, err error) {
+func parseMetadata(file *zip.Reader) (metadata mdata, err error) {
 	path, err := contentPath(file)
 	if err != nil {
 		return
