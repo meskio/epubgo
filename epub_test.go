@@ -7,6 +7,8 @@ package epubgo
 import "testing"
 
 import (
+	"archive/zip"
+	"bytes"
 	"os"
 )
 
@@ -21,6 +23,8 @@ const (
 	len_metadafields  = 8
 	identifier_scheme = "URI"
 	creator_file_as   = "Twain, Mark"
+	html_file         = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html"
+	html_path         = "3174/" + html_file
 )
 
 func TestOpenClose(t *testing.T) {
@@ -41,6 +45,45 @@ func TestLoad(t *testing.T) {
 	}
 
 	f.Close()
+}
+
+func TestOpenFile(t *testing.T) {
+	f, _ := Open(book_path)
+	defer f.Close()
+
+	html, err := f.OpenFile(html_file)
+	if err != nil {
+		t.Errorf("OpenFile(%v) return an error: %v", html_file, err)
+		return
+	}
+	defer html.Close()
+
+	zipFile, _ := zip.OpenReader(book_path)
+	defer zipFile.Close()
+	var file *zip.File
+	for _, file = range zipFile.Reader.File {
+		if file.Name == html_path {
+			break
+		}
+	}
+	zipHtml, _ := file.Open()
+
+	const size = 1024
+	buff1 := make([]byte, size)
+	buff2 := make([]byte, size)
+	var n1, n2 int = size, size
+	for n1 == size {
+		n1, _ = html.Read(buff1)
+		n2, _ = zipHtml.Read(buff2)
+		if n1 != n2 {
+			t.Errorf("File(%v) returned different length file than the one in the epub", html_file)
+			return
+		}
+		if !bytes.Equal(buff1, buff2) {
+			t.Errorf("File(%v) returned different file than the one in the epub", html_file)
+			return
+		}
+	}
 }
 
 func TestMetadata(t *testing.T) {

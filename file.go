@@ -9,6 +9,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"io"
+	"strings"
 )
 
 func openFile(file *zip.Reader, path string) (io.ReadCloser, error) {
@@ -20,6 +21,26 @@ func openFile(file *zip.Reader, path string) (io.ReadCloser, error) {
 	return nil, errors.New("File " + path + " not found")
 }
 
+func openOPF(file *zip.Reader) (io.ReadCloser, error) {
+	path, err := getOpfPath(file)
+	if err != nil {
+		return nil, err
+	}
+	return openFile(file, path)
+}
+
+func getRootPath(file *zip.Reader) (string, error) {
+	opfPath, err := getOpfPath(file)
+	if err != nil {
+		return "", err
+	}
+	index := strings.LastIndex(opfPath, "/")
+	if index == -1 {
+		return "", nil
+	}
+	return opfPath[:index+1], nil
+}
+
 type rootfile struct {
 	Path string `xml:"full-path,attr"`
 }
@@ -28,19 +49,15 @@ type container_xml struct {
 	Rootfile rootfile `xml:"rootfiles>rootfile"`
 }
 
-func openOPF(file *zip.Reader) (io.ReadCloser, error) {
+func getOpfPath(file *zip.Reader) (string, error) {
 	f, err := openFile(file, "META-INF/container.xml")
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	defer f.Close()
 
 	var c container_xml
 	decoder := xml.NewDecoder(f)
 	err = decoder.Decode(&c)
-	if err != nil {
-		return nil, err
-	}
-
-	return openFile(file, c.Rootfile.Path)
+	return c.Rootfile.Path, err
 }

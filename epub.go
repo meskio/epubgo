@@ -21,6 +21,7 @@ type mdata map[string][]element
 type Epub struct {
 	file     *os.File
 	zip      *zip.Reader
+	rootPath string
 	metadata mdata
 }
 
@@ -53,6 +54,11 @@ func (e *Epub) load(r io.ReaderAt, size int64) (err error) {
 		return
 	}
 
+	e.rootPath, err = getRootPath(e.zip)
+	if err != nil {
+		return
+	}
+
 	opf, err := openOPF(e.zip)
 	if err != nil {
 		return
@@ -71,6 +77,11 @@ func (e Epub) Close() {
 	if e.file != nil {
 		e.file.Close()
 	}
+}
+
+// Open a file inside the epub
+func (e Epub) OpenFile(name string) (io.ReadCloser, error) {
+	return openFile(e.zip, e.rootPath+name)
 }
 
 // Get the values of a metadata field
