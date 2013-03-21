@@ -12,7 +12,9 @@ import (
 )
 
 type xmlOPF struct {
-	Metadata meta `xml:"metadata"`
+	Metadata meta       `xml:"metadata"`
+	Manifest []manifest `xml:"manifest>item"`
+	Spine    spine      `xml:"spine"`
 }
 type meta struct {
 	Title       []string     `xml:"title"`
@@ -30,6 +32,26 @@ type meta struct {
 	Relation    []string     `xml:"relation"`
 	Coverage    []string     `xml:"coverage"`
 	Rights      []string     `xml:"rights"`
+}
+type manifest struct {
+	Id           string `xml:"id,attr"`
+	Href         string `xml:"href,attr"`
+	MediaType    string `xml:"media-type,attr"`
+	Fallback     string `xml:"media-fallback,attr"`
+	Properties   string `xml:"properties,attr"`
+	MediaOverlay string `xml:"media-overlay,attr"`
+}
+type spine struct {
+	Id              string      `xml:"id,attr"`
+	Toc             string      `xml:"toc,attr"`
+	PageProgression string      `xml:"page-progression-direction,attr"`
+	Items           []spineItem `xml:"itemref"`
+}
+type spineItem struct {
+	Idref      string `xml:"idref,attr"`
+	Linear     string `xml:"linear,attr"`
+	Id         string `xml:"id,attr"`
+	Properties string `xml:"properties,attr"`
 }
 type identifier struct {
 	Data   string `xml:",chardata"`
