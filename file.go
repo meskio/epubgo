@@ -28,10 +28,10 @@ type container_xml struct {
 	Rootfile rootfile `xml:"rootfiles>rootfile"`
 }
 
-func contentPath(file *zip.Reader) (string, error) {
+func openOPF(file *zip.Reader) (io.ReadCloser, error) {
 	f, err := openFile(file, "META-INF/container.xml")
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer f.Close()
 
@@ -39,7 +39,8 @@ func contentPath(file *zip.Reader) (string, error) {
 	decoder := xml.NewDecoder(f)
 	err = decoder.Decode(&c)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return c.Rootfile.Path, nil
+
+	return openFile(file, c.Rootfile.Path)
 }

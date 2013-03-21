@@ -5,13 +5,32 @@
 package epubgo
 
 import (
-	"archive/zip"
 	"encoding/xml"
+	"io"
 	"reflect"
 	"strings"
 )
 
-// TODO convert date to date type?
+type xmlOPF struct {
+	Metadata meta `xml:"metadata"`
+}
+type meta struct {
+	Title       []string     `xml:"title"`
+	Language    []string     `xml:"language"`
+	Identifier  []identifier `xml:"identifier"`
+	Creator     []author     `xml:"creator"`
+	Subject     []string     `xml:"subject"`
+	Description []string     `xml:"description"`
+	Publisher   []string     `xml:"publisher"`
+	Contributor []author     `xml:"contributor"`
+	Date        []date       `xml:"date"`
+	Type        []string     `xml:"type"`
+	Format      []string     `xml:"format"`
+	Source      []string     `xml:"source"`
+	Relation    []string     `xml:"relation"`
+	Coverage    []string     `xml:"coverage"`
+	Rights      []string     `xml:"rights"`
+}
 type identifier struct {
 	Data   string `xml:",chardata"`
 	Id     string `xml:"id,attr"`
@@ -23,25 +42,9 @@ type author struct {
 	Role   string `xml:"role,attr"`
 }
 type date struct {
+	// TODO: convert date to date type?
 	Data  string `xml:",chardata"`
 	Event string `xml:"event,attr"`
-}
-type meta struct {
-	Title       []string     `xml:"metadata>title"`
-	Language    []string     `xml:"metadata>language"`
-	Identifier  []identifier `xml:"metadata>identifier"`
-	Creator     []author     `xml:"metadata>creator"`
-	Subject     []string     `xml:"metadata>subject"`
-	Description []string     `xml:"metadata>description"`
-	Publisher   []string     `xml:"metadata>publisher"`
-	Contributor []author     `xml:"metadata>contributor"`
-	Date        []date       `xml:"metadata>date"`
-	Type        []string     `xml:"metadata>type"`
-	Format      []string     `xml:"metadata>format"`
-	Source      []string     `xml:"metadata>source"`
-	Relation    []string     `xml:"metadata>relation"`
-	Coverage    []string     `xml:"metadata>coverage"`
-	Rights      []string     `xml:"metadata>rights"`
 }
 
 func toMData(m meta) mdata {
@@ -83,25 +86,14 @@ func toMData(m meta) mdata {
 	return metadata
 }
 
-func parseMetadata(file *zip.Reader) (metadata mdata, err error) {
-	path, err := contentPath(file)
+func parseOPF(opf io.Reader) (metadata mdata, err error) {
+	decoder := xml.NewDecoder(opf)
+	var o xmlOPF
+	err = decoder.Decode(&o)
 	if err != nil {
 		return
 	}
 
-	f, err := openFile(file, path)
-	if err != nil {
-		return
-	}
-	defer f.Close()
-
-	decoder := xml.NewDecoder(f)
-	var m meta
-	err = decoder.Decode(&m)
-	if err != nil {
-		return
-	}
-
-	metadata = toMData(m)
+	metadata = toMData(o.Metadata)
 	return
 }

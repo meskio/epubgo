@@ -52,7 +52,13 @@ func (e *Epub) load(r io.ReaderAt, size int64) (err error) {
 	if err != nil {
 		return
 	}
-	e.metadata, err = parseMetadata(e.zip)
+
+	opf, err := openOPF(e.zip)
+	if err != nil {
+		return
+	}
+	defer opf.Close()
+	e.metadata, err = parseOPF(opf)
 	return err
 }
 
