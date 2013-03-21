@@ -58,8 +58,12 @@ func (e *Epub) load(r io.ReaderAt, size int64) (err error) {
 		return
 	}
 	defer opf.Close()
-	e.metadata, err = parseOPF(opf)
-	return err
+	parsedOPF, err := parseOPF(opf)
+	if err != nil {
+		return
+	}
+	e.metadata = parsedOPF.toMData()
+	return
 }
 
 // Close the epub file

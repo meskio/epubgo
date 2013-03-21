@@ -69,7 +69,8 @@ type date struct {
 	Event string `xml:"event,attr"`
 }
 
-func toMData(m meta) mdata {
+func (opf xmlOPF) toMData() mdata {
+	m := opf.Metadata
 	metadata := make(mdata)
 	v := reflect.ValueOf(m)
 	typeOf := v.Type()
@@ -108,14 +109,13 @@ func toMData(m meta) mdata {
 	return metadata
 }
 
-func parseOPF(opf io.Reader) (metadata mdata, err error) {
+func parseOPF(opf io.Reader) (*xmlOPF, error) {
 	decoder := xml.NewDecoder(opf)
 	var o xmlOPF
-	err = decoder.Decode(&o)
+	err := decoder.Decode(&o)
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	metadata = toMData(o.Metadata)
-	return
+	return &o, nil
 }
