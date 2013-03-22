@@ -11,18 +11,18 @@ import (
 	"os"
 )
 
-type element struct {
-	content string
-	attr    map[string]string
-}
-type mdata map[string][]element
-
 // Epub holds all the data of the ebook
 type Epub struct {
 	file     *os.File
 	zip      *zip.Reader
 	rootPath string
 	metadata mdata
+}
+
+type mdata map[string][]mdataElement
+type mdataElement struct {
+	content string
+	attr    map[string]string
 }
 
 // Open an existing epub

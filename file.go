@@ -12,13 +12,12 @@ import (
 	"strings"
 )
 
-func openFile(file *zip.Reader, path string) (io.ReadCloser, error) {
-	for _, f := range file.File {
-		if f.Name == path {
-			return f.Open()
-		}
-	}
-	return nil, errors.New("File " + path + " not found")
+type container_xml struct {
+	// FIXME: only support for one rootfile, can it be more than one?
+	Rootfile rootfile `xml:"rootfiles>rootfile"`
+}
+type rootfile struct {
+	Path string `xml:"full-path,attr"`
 }
 
 func openOPF(file *zip.Reader) (io.ReadCloser, error) {
@@ -41,14 +40,6 @@ func getRootPath(file *zip.Reader) (string, error) {
 	return opfPath[:index+1], nil
 }
 
-type rootfile struct {
-	Path string `xml:"full-path,attr"`
-}
-type container_xml struct {
-	// FIXME: only support for one rootfile, can it be more than one?
-	Rootfile rootfile `xml:"rootfiles>rootfile"`
-}
-
 func getOpfPath(file *zip.Reader) (string, error) {
 	f, err := openFile(file, "META-INF/container.xml")
 	if err != nil {
@@ -60,4 +51,13 @@ func getOpfPath(file *zip.Reader) (string, error) {
 	decoder := xml.NewDecoder(f)
 	err = decoder.Decode(&c)
 	return c.Rootfile.Path, err
+}
+
+func openFile(file *zip.Reader, path string) (io.ReadCloser, error) {
+	for _, f := range file.File {
+		if f.Name == path {
+			return f.Open()
+		}
+	}
+	return nil, errors.New("File " + path + " not found")
 }

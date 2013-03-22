@@ -33,6 +33,21 @@ type meta struct {
 	Coverage    []string     `xml:"coverage"`
 	Rights      []string     `xml:"rights"`
 }
+type identifier struct {
+	Data   string `xml:",chardata"`
+	Id     string `xml:"id,attr"`
+	Scheme string `xml:"scheme,attr"`
+}
+type author struct {
+	Data   string `xml:",chardata"`
+	FileAs string `xml:"file-as,attr"`
+	Role   string `xml:"role,attr"`
+}
+type date struct {
+	// TODO: convert date to date type?
+	Data  string `xml:",chardata"`
+	Event string `xml:"event,attr"`
+}
 type manifest struct {
 	Id           string `xml:"id,attr"`
 	Href         string `xml:"href,attr"`
@@ -52,21 +67,6 @@ type spineItem struct {
 	Linear     string `xml:"linear,attr"`
 	Id         string `xml:"id,attr"`
 	Properties string `xml:"properties,attr"`
-}
-type identifier struct {
-	Data   string `xml:",chardata"`
-	Id     string `xml:"id,attr"`
-	Scheme string `xml:"scheme,attr"`
-}
-type author struct {
-	Data   string `xml:",chardata"`
-	FileAs string `xml:"file-as,attr"`
-	Role   string `xml:"role,attr"`
-}
-type date struct {
-	// TODO: convert date to date type?
-	Data  string `xml:",chardata"`
-	Event string `xml:"event,attr"`
 }
 
 func parseOPF(opf io.Reader) (*xmlOPF, error) {
@@ -92,30 +92,35 @@ func (opf xmlOPF) toMData() mdata {
 		}
 
 		fieldName := strings.ToLower(typeOf.Field(i).Name)
-		data := make([]element, field.Len())
+		data := make([]mdataElement, field.Len())
 		for j := 0; j < field.Len(); j++ {
-			data[j].attr = make(map[string]string)
-			elem := field.Index(j).Interface()
-			switch elem.(type) {
-			case string:
-				data[j].content, _ = elem.(string)
-			case identifier:
-				ident, _ := elem.(identifier)
-				data[j].content = ident.Data
-				data[j].attr["id"] = ident.Id
-				data[j].attr["scheme"] = ident.Scheme
-			case author:
-				auth, _ := elem.(author)
-				data[j].content = auth.Data
-				data[j].attr["file-as"] = auth.FileAs
-				data[j].attr["role"] = auth.Role
-			case date:
-				d, _ := elem.(date)
-				data[j].content = d.Data
-				data[j].attr["event"] = d.Event
-			}
+			element := field.Index(j).Interface()
+			data[j] = elementToMData(element)
 		}
 		metadata[fieldName] = data
 	}
 	return metadata
+}
+
+func elementToMData(element interface{}) (result mdataElement) {
+	result.attr = make(map[string]string)
+	switch element.(type) {
+	case string:
+		result.content, _ = element.(string)
+	case identifier:
+		ident, _ := element.(identifier)
+		result.content = ident.Data
+		result.attr["id"] = ident.Id
+		result.attr["scheme"] = ident.Scheme
+	case author:
+		auth, _ := element.(author)
+		result.content = auth.Data
+		result.attr["file-as"] = auth.FileAs
+		result.attr["role"] = auth.Role
+	case date:
+		d, _ := element.(date)
+		result.content = d.Data
+		result.attr["event"] = d.Event
+	}
+	return
 }
