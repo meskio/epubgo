@@ -6,6 +6,10 @@ package epubgo
 
 import "testing"
 
+const (
+	first_title = "A DOG'S TALE, By Mark Twain"
+)
+
 func TestIterator(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
@@ -13,6 +17,17 @@ func TestIterator(t *testing.T) {
 	it := f.Navigation()
 	if it.HasChildren() {
 		t.Errorf("it.HasChildren() not behaving as expected")
+		return
+	}
+}
+
+func TestTitle(t *testing.T) {
+	f, _ := Open(book_path)
+	defer f.Close()
+
+	it := f.Navigation()
+	if it.Title() != first_title {
+		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), first_title)
 		return
 	}
 }

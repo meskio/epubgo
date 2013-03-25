@@ -17,6 +17,10 @@ func newNavigationIterator(navMap []navpoint) *NavigationIterator {
 	return &nav
 }
 
+func (nav NavigationIterator) Title() string {
+	return nav.item().Text
+}
+
 func (nav NavigationIterator) HasChildren() bool {
 	return nav.item().NavPoint != nil
 }
