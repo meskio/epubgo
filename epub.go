@@ -17,6 +17,7 @@ type Epub struct {
 	zip      *zip.Reader
 	rootPath string
 	metadata mdata
+	ncx      *xmlNCX
 }
 
 type mdata map[string][]mdataElement
@@ -59,6 +60,10 @@ func (e *Epub) load(r io.ReaderAt, size int64) (err error) {
 		return
 	}
 
+	return e.parseFiles()
+}
+
+func (e *Epub) parseFiles() (err error) {
 	opf, err := openOPF(e.zip)
 	if err != nil {
 		return
@@ -68,7 +73,17 @@ func (e *Epub) load(r io.ReaderAt, size int64) (err error) {
 	if err != nil {
 		return
 	}
+
 	e.metadata = parsedOPF.toMData()
+	if err != nil {
+		return
+	}
+	ncx, err := e.OpenFile(parsedOPF.ncxPath())
+	if err != nil {
+		return
+	}
+	defer ncx.Close()
+	e.ncx, err = parseNCX(ncx)
 	return
 }
 
@@ -82,6 +97,11 @@ func (e Epub) Close() {
 // Open a file inside the epub
 func (e Epub) OpenFile(name string) (io.ReadCloser, error) {
 	return openFile(e.zip, e.rootPath+name)
+}
+
+// Get a navigation iterator
+func (e Epub) Navigation() *NavigationIterator {
+	return newNavigationIterator(e.ncx.navMap())
 }
 
 // Get the values of a metadata field

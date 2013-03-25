@@ -80,6 +80,19 @@ func parseOPF(opf io.Reader) (*xmlOPF, error) {
 	return &o, nil
 }
 
+func (opf xmlOPF) ncxPath() string {
+	return opf.filePath(opf.Spine.Toc)
+}
+
+func (opf xmlOPF) filePath(id string) string {
+	for _, item := range opf.Manifest {
+		if item.Id == id {
+			return item.Href
+		}
+	}
+	return ""
+}
+
 func (opf xmlOPF) toMData() mdata {
 	m := opf.Metadata
 	metadata := make(mdata)
