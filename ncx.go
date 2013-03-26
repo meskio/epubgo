@@ -14,8 +14,11 @@ type xmlNCX struct {
 }
 type navpoint struct {
 	Text     string     `xml:"navLabel>text"`
-	Content  string     `xml:"content>src,attr"`
+	Content  content    `xml:"content"`
 	NavPoint []navpoint `xml:"navPoint"`
+}
+type content struct {
+	Src string `xml:"src,attr"`
 }
 
 func parseNCX(ncx io.Reader) (*xmlNCX, error) {
@@ -35,6 +38,10 @@ func (ncx xmlNCX) navMap() []navpoint {
 
 func (point navpoint) Title() string {
 	return point.Text
+}
+
+func (point navpoint) Url() string {
+	return point.Content.Src
 }
 
 func (point navpoint) Children() []navpoint {
