@@ -8,6 +8,7 @@ import "testing"
 
 const (
 	first_title = "A DOG'S TALE, By Mark Twain"
+	first_url   = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html#pgepubid00000"
 )
 
 func TestIterator(t *testing.T) {
@@ -28,6 +29,17 @@ func TestTitle(t *testing.T) {
 	it := f.Navigation()
 	if it.Title() != first_title {
 		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), first_title)
+		return
+	}
+}
+
+func TestUrl(t *testing.T) {
+	f, _ := Open(book_path)
+	defer f.Close()
+
+	it := f.Navigation()
+	if it.Url() != first_url {
+		t.Errorf("it.Url() return: %v when was expected: %v", it.Url(), first_url)
 		return
 	}
 }

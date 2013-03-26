@@ -21,6 +21,10 @@ func (nav NavigationIterator) Title() string {
 	return nav.item().Title()
 }
 
+func (nav NavigationIterator) Url() string {
+	return nav.item().Url()
+}
+
 func (nav NavigationIterator) HasChildren() bool {
 	return nav.item().Children() != nil
 }
