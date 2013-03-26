@@ -32,3 +32,11 @@ func parseNCX(ncx io.Reader) (*xmlNCX, error) {
 func (ncx xmlNCX) navMap() []navpoint {
 	return ncx.NavMap
 }
+
+func (point navpoint) Title() string {
+	return point.Text
+}
+
+func (point navpoint) Children() []navpoint {
+	return point.NavPoint
+}
