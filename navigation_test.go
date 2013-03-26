@@ -18,7 +18,15 @@ func TestIterator(t *testing.T) {
 	it := f.Navigation()
 	if it.HasChildren() {
 		t.Errorf("it.HasChildren() not behaving as expected")
-		return
+	}
+	if it.HasParents() {
+		t.Errorf("it.HasParents() not behaving as expected")
+	}
+	if !it.IsFirst() {
+		t.Errorf("it.IsFirst() not behaving as expected")
+	}
+	if it.IsLast() {
+		t.Errorf("it.IsLast() not behaving as expected")
 	}
 }
 
@@ -29,7 +37,6 @@ func TestTitle(t *testing.T) {
 	it := f.Navigation()
 	if it.Title() != first_title {
 		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), first_title)
-		return
 	}
 }
 
@@ -40,6 +47,5 @@ func TestUrl(t *testing.T) {
 	it := f.Navigation()
 	if it.Url() != first_url {
 		t.Errorf("it.Url() return: %v when was expected: %v", it.Url(), first_url)
-		return
 	}
 }

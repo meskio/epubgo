@@ -29,6 +29,18 @@ func (nav NavigationIterator) HasChildren() bool {
 	return nav.item().Children() != nil
 }
 
+func (nav NavigationIterator) HasParents() bool {
+	return nav.depth != nil
+}
+
+func (nav NavigationIterator) IsFirst() bool {
+	return nav.index == 0
+}
+
+func (nav NavigationIterator) IsLast() bool {
+	return nav.index == len(nav.navMap)
+}
+
 func (nav NavigationIterator) item() *navpoint {
 	return &nav.navMap[nav.index]
 }
