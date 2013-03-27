@@ -17,6 +17,7 @@ type Epub struct {
 	zip      *zip.Reader
 	rootPath string
 	metadata mdata
+	opf      *xmlOPF
 	ncx      *xmlNCX
 }
 
@@ -64,21 +65,21 @@ func (e *Epub) load(r io.ReaderAt, size int64) (err error) {
 }
 
 func (e *Epub) parseFiles() (err error) {
-	opf, err := openOPF(e.zip)
+	opfFile, err := openOPF(e.zip)
 	if err != nil {
 		return
 	}
-	defer opf.Close()
-	parsedOPF, err := parseOPF(opf)
+	defer opfFile.Close()
+	e.opf, err = parseOPF(opfFile)
 	if err != nil {
 		return
 	}
 
-	e.metadata = parsedOPF.toMData()
+	e.metadata = e.opf.toMData()
 	if err != nil {
 		return
 	}
-	ncx, err := e.OpenFile(parsedOPF.ncxPath())
+	ncx, err := e.OpenFile(e.opf.ncxPath())
 	if err != nil {
 		return
 	}
