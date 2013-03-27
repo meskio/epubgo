@@ -9,6 +9,7 @@ import "testing"
 import (
 	"archive/zip"
 	"bytes"
+	"io/ioutil"
 	"os"
 )
 
@@ -68,21 +69,15 @@ func TestOpenFile(t *testing.T) {
 	}
 	zipHtml, _ := file.Open()
 
-	const size = 1024
-	buff1 := make([]byte, size)
-	buff2 := make([]byte, size)
-	var n1, n2 int = size, size
-	for n1 == size {
-		n1, _ = html.Read(buff1)
-		n2, _ = zipHtml.Read(buff2)
-		if n1 != n2 {
-			t.Errorf("File(%v) returned different length file than the one in the epub", html_file)
-			return
-		}
-		if !bytes.Equal(buff1, buff2) {
-			t.Errorf("File(%v) returned different file than the one in the epub", html_file)
-			return
-		}
+	buff1, err := ioutil.ReadAll(html)
+	if err != nil {
+		t.Errorf("Error reading the opened file: %v", err)
+		return
+	}
+	buff2, _ := ioutil.ReadAll(zipHtml)
+	if !bytes.Equal(buff1, buff2) {
+		t.Errorf("The files on zip and OpenFile are not equal")
+		return
 	}
 }
 
