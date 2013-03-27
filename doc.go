@@ -10,9 +10,15 @@ A simple example of usage:
 	if err != nil {
 		log.Panic(err)
 	}
-	difer book.Close()
+	defer book.Close()
 	title, _ := book.Metadata("title")
 	fmt.Println(title[0])
+
+The pages of the book can be browsed with the SpineIterator:
+	it := book.Spine()
+	page := it.Open()
+	defer page.Close()
+	it.Next()
 
 The index of the book can be browsed with the NavigationIterator:
 	it := book.Navigation()
