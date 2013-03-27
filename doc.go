@@ -14,5 +14,9 @@ A simple example of usage:
 	title, _ := book.Metadata("title")
 	fmt.Println(title[0])
 
+The index of the book can be browsed with the NavigationIterator:
+	it := book.Navigation()
+	it.Title()
+	it.Next()
 */
 package epubgo
