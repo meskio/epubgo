@@ -137,3 +137,7 @@ func elementToMData(element interface{}) (result mdataElement) {
 	}
 	return
 }
+
+func (opf xmlOPF) spineLength() int {
+	return len(opf.Spine.Items)
+}
