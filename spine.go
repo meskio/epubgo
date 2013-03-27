@@ -6,6 +6,7 @@ package epubgo
 
 import (
 	"errors"
+	"io"
 )
 
 // Iterator on the epub pages spine
@@ -14,11 +15,13 @@ import (
 type SpineIterator struct {
 	opf   *xmlOPF
 	index int
+	epub  *Epub
 }
 
-func newSpineIterator(opf *xmlOPF) *SpineIterator {
+func newSpineIterator(epub *Epub) *SpineIterator {
 	var spine SpineIterator
-	spine.opf = opf
+	spine.epub = epub
+	spine.opf = epub.opf
 	spine.index = 0
 	return &spine
 }
@@ -53,6 +56,12 @@ func (spine *SpineIterator) Previous() error {
 	}
 	spine.index--
 	return nil
+}
+
+// Open the file of the iterator
+func (spine SpineIterator) Open() (io.ReadCloser, error) {
+	url := spine.Url()
+	return spine.epub.OpenFile(url)
 }
 
 // Get the url of the item on the iterator

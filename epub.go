@@ -107,7 +107,7 @@ func (e Epub) Navigation() *NavigationIterator {
 
 // Get aspine iterator
 func (e Epub) Spine() *SpineIterator {
-	return newSpineIterator(e.opf)
+	return newSpineIterator(&e)
 }
 
 // Get the values of a metadata field
