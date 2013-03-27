@@ -43,3 +43,14 @@ func (spine *SpineIterator) Next() error {
 	spine.index++
 	return nil
 }
+
+// Step back the iterator to the previous element on the spine
+//
+// Returns an error if is the first
+func (spine *SpineIterator) Previous() error {
+	if spine.IsFirst() {
+		return errors.New("It is the first entry")
+	}
+	spine.index--
+	return nil
+}
