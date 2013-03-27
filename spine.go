@@ -54,3 +54,8 @@ func (spine *SpineIterator) Previous() error {
 	spine.index--
 	return nil
 }
+
+// Get the url of the item on the iterator
+func (spine SpineIterator) Url() string {
+	return spine.opf.spineUrl(spine.index)
+}

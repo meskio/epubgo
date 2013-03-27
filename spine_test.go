@@ -6,6 +6,10 @@ package epubgo
 
 import "testing"
 
+const (
+	spine_url = "wrap0000.html"
+)
+
 func TestFirst(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
@@ -57,5 +61,15 @@ func TestMove(t *testing.T) {
 	}
 	if it.IsLast() {
 		t.Errorf("it.IsLast() not behaving as expected")
+	}
+}
+
+func TestSpineUrl(t *testing.T) {
+	f, _ := Open(book_path)
+	defer f.Close()
+
+	it := f.Spine()
+	if it.Url() != spine_url {
+		t.Errorf("it.Url() return: %v when was expected: %v", it.Url(), spine_url)
 	}
 }

@@ -6,6 +6,7 @@ package epubgo
 
 import (
 	"encoding/xml"
+	"errors"
 	"io"
 	"reflect"
 	"strings"
@@ -140,4 +141,19 @@ func elementToMData(element interface{}) (result mdataElement) {
 
 func (opf xmlOPF) spineLength() int {
 	return len(opf.Spine.Items)
+}
+
+func (opf xmlOPF) spineUrl(index int) string {
+	idref := opf.Spine.Items[index].Idref
+	url, _ := opf.getUrl(idref)
+	return url
+}
+
+func (opf xmlOPF) getUrl(id string) (string, error) {
+	for _, item := range opf.Manifest {
+		if item.Id == id {
+			return item.Href, nil
+		}
+	}
+	return "", errors.New("Id " + id + " not in the manifest")
 }
