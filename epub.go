@@ -113,7 +113,7 @@ func (e Epub) Spine() *SpineIterator {
 // Get the values of a metadata field
 //
 // The valid field names are:
-//    Title, Language, Identifier, Creator, Subject, Description, Publisher, 
+//    Title, Language, Identifier, Creator, Subject, Description, Publisher,
 //    Contributor, Date, Type, Format, Source, Relation, Coverage, Rights
 func (e Epub) Metadata(field string) ([]string, error) {
 	elem, ok := e.metadata[field]
