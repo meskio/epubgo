@@ -44,6 +44,19 @@ func TestLast(t *testing.T) {
 	}
 }
 
+func TestLastNext(t *testing.T) {
+	f, _ := Open(book_path)
+	defer f.Close()
+
+	it := f.Spine()
+	if err := it.Next(); err != nil {
+		t.Errorf("it.Next() return an error: %v", err)
+	}
+	if err := it.Next(); err == nil {
+		t.Errorf("it.Next() didn't return an error being the last element")
+	}
+}
+
 func TestMove(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
