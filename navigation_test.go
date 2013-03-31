@@ -16,7 +16,10 @@ func TestIterator(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Navigation()
+	it, err := f.Navigation()
+	if err != nil {
+		t.Errorf("epub.Navigation() return an error: %v", err)
+	}
 	if it.HasChildren() {
 		t.Errorf("it.HasChildren() not behaving as expected")
 	}
@@ -35,7 +38,7 @@ func TestTitle(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Navigation()
+	it, _ := f.Navigation()
 	if it.Title() != first_title {
 		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), first_title)
 	}
@@ -45,7 +48,7 @@ func TestUrl(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Navigation()
+	it, _ := f.Navigation()
 	if it.Url() != first_url {
 		t.Errorf("it.Url() return: %v when was expected: %v", it.Url(), first_url)
 	}
@@ -55,7 +58,7 @@ func TestDepth(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Navigation()
+	it, _ := f.Navigation()
 	if it.In() == nil {
 		t.Errorf("it.In() din't return an error whithout having children")
 	}

@@ -101,12 +101,12 @@ func (e Epub) OpenFile(name string) (io.ReadCloser, error) {
 }
 
 // Get a navigation iterator
-func (e Epub) Navigation() *NavigationIterator {
+func (e Epub) Navigation() (*NavigationIterator, error) {
 	return newNavigationIterator(e.ncx.navMap())
 }
 
 // Get aspine iterator
-func (e Epub) Spine() *SpineIterator {
+func (e Epub) Spine() (*SpineIterator, error) {
 	return newSpineIterator(&e)
 }
 

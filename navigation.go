@@ -21,11 +21,14 @@ type navCursor struct {
 	index  int
 }
 
-func newNavigationIterator(navMap []navpoint) *NavigationIterator {
+func newNavigationIterator(navMap []navpoint) (*NavigationIterator, error) {
+	if len(navMap) == 0 {
+		return nil, errors.New("Navigation is empty")
+	}
 	var nav NavigationIterator
 	nav.curr.navMap = navMap
 	nav.curr.index = 0
-	return &nav
+	return &nav, nil
 }
 
 // Get the title of the item on the iterator

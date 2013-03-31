@@ -19,7 +19,10 @@ func TestFirst(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Spine()
+	it, err := f.Spine()
+	if err != nil {
+		t.Errorf("epub.Spine() return an error: %v", err)
+	}
 	if !it.IsFirst() {
 		t.Errorf("it.IsFirst() not behaving as expected")
 	}
@@ -32,7 +35,7 @@ func TestLast(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Spine()
+	it, _ := f.Spine()
 	if err := it.Next(); err != nil {
 		t.Errorf("it.Next() return an error: %v", err)
 	}
@@ -48,7 +51,7 @@ func TestLastNext(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Spine()
+	it, _ := f.Spine()
 	if err := it.Next(); err != nil {
 		t.Errorf("it.Next() return an error: %v", err)
 	}
@@ -61,7 +64,7 @@ func TestMove(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Spine()
+	it, _ := f.Spine()
 	if it.Previous() == nil {
 		t.Errorf("it.Previous() din't return an error being the first")
 	}
@@ -86,7 +89,7 @@ func TestSpineUrl(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Spine()
+	it, _ := f.Spine()
 	if it.Url() != spine_url {
 		t.Errorf("it.Url() return: %v when was expected: %v", it.Url(), spine_url)
 	}
@@ -96,7 +99,7 @@ func TestSpineOpen(t *testing.T) {
 	f, _ := Open(book_path)
 	defer f.Close()
 
-	it := f.Spine()
+	it, _ := f.Spine()
 	html1, err := it.Open()
 	if err != nil {
 		t.Errorf("it.Open() return an error: %v", err)

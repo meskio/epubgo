@@ -18,12 +18,15 @@ type SpineIterator struct {
 	epub  *Epub
 }
 
-func newSpineIterator(epub *Epub) *SpineIterator {
+func newSpineIterator(epub *Epub) (*SpineIterator, error) {
+	if epub.opf.spineLength() == 0 {
+		return nil, errors.New("Spine is empty")
+	}
 	var spine SpineIterator
 	spine.epub = epub
 	spine.opf = epub.opf
 	spine.index = 0
-	return &spine
+	return &spine, nil
 }
 
 // Is it the first element of the book?
