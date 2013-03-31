@@ -15,13 +15,13 @@ A simple example of usage:
 	fmt.Println(title[0])
 
 The pages of the book can be browsed with the SpineIterator:
-	it := book.Spine()
+	it, err := book.Spine()
 	page := it.Open()
 	defer page.Close()
 	it.Next()
 
 The index of the book can be browsed with the NavigationIterator:
-	it := book.Navigation()
+	it, err := book.Navigation()
 	it.Title()
 	it.Next()
 */
