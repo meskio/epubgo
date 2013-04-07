@@ -33,6 +33,7 @@ type meta struct {
 	Relation    []string     `xml:"relation"`
 	Coverage    []string     `xml:"coverage"`
 	Rights      []string     `xml:"rights"`
+	Meta        []metafield  `xml:"meta"`
 }
 type identifier struct {
 	Data   string `xml:",chardata"`
@@ -48,6 +49,10 @@ type date struct {
 	// TODO: convert date to date type?
 	Data  string `xml:",chardata"`
 	Event string `xml:"event,attr"`
+}
+type metafield struct {
+	Name    string `xml:"name,attr"`
+	Content string `xml:"content,attr"`
 }
 type manifest struct {
 	Id           string `xml:"id,attr"`
@@ -135,6 +140,11 @@ func elementToMData(element interface{}) (result mdataElement) {
 		d, _ := element.(date)
 		result.content = d.Data
 		result.attr["event"] = d.Event
+	case metafield:
+		m, _ := element.(metafield)
+		result.content = m.Content
+		result.attr["name"] = m.Name
+		result.attr["content"] = m.Content
 	}
 	return
 }

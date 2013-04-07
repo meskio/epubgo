@@ -141,7 +141,7 @@ func (e Epub) MetadataFields() []string {
 
 // Get the metadata attributes
 //
-// The array  has the fields on the smae order than the Metadata method
+// The array has the fields on the same order than the Metadata method
 func (e Epub) MetadataAttr(field string) ([]map[string]string, error) {
 	elem, ok := e.metadata[field]
 	if ok {

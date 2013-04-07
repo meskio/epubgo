@@ -21,9 +21,10 @@ const (
 	book_creator      = "Mark Twain"
 	book_subject      = "Dogs -- Fiction"
 	book_rights       = "Public domain in the USA."
-	len_metadafields  = 8
+	len_metadafields  = 9
 	identifier_scheme = "URI"
 	creator_file_as   = "Twain, Mark"
+	meta_name         = "cover"
 	html_file         = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html"
 	html_path         = "3174/" + html_file
 )
@@ -134,5 +135,8 @@ func TestMetadataAttr(t *testing.T) {
 	}
 	if creator, _ := f.MetadataAttr("creator"); creator[0]["file-as"] != creator_file_as {
 		t.Errorf("Metadata creator attr file-as '%v', the expected was '%v'", creator[0]["file-as"], creator_file_as)
+	}
+	if meta, _ := f.MetadataAttr("meta"); meta[0]["name"] != meta_name {
+		t.Errorf("Metadata meta attr name '%v', the expected was '%v'", meta[0]["name"], meta_name)
 	}
 }
