@@ -42,7 +42,7 @@ func Open(path string) (e *Epub, err error) {
 	return
 }
 
-// Load an eupb from an io.ReaderAt
+// Load an epub from an io.ReaderAt
 func Load(r io.ReaderAt, size int64) (e *Epub, err error) {
 	e = new(Epub)
 	e.file = nil
@@ -105,7 +105,7 @@ func (e Epub) Navigation() (*NavigationIterator, error) {
 	return newNavigationIterator(e.ncx.navMap())
 }
 
-// Get aspine iterator
+// Get a spine iterator
 func (e Epub) Spine() (*SpineIterator, error) {
 	return newSpineIterator(&e)
 }
@@ -128,7 +128,7 @@ func (e Epub) Metadata(field string) ([]string, error) {
 	return nil, errors.New("Field " + field + " don't exists")
 }
 
-// Get the list of metadata fields
+// Get the list of metadata fields pressent on the current epub
 func (e Epub) MetadataFields() []string {
 	fields := make([]string, len(e.metadata))
 	i := 0
@@ -141,7 +141,8 @@ func (e Epub) MetadataFields() []string {
 
 // Get the metadata attributes
 //
-// The array has the fields on the same order than the Metadata method
+// Returns: an array of maps of each attribute and it's value.
+// The array has the fields on the same order than the Metadata method.
 func (e Epub) MetadataAttr(field string) ([]map[string]string, error) {
 	elem, ok := e.metadata[field]
 	if ok {
