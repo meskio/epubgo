@@ -114,7 +114,7 @@ func (e Epub) Spine() (*SpineIterator, error) {
 //
 // The valid field names are:
 //    Title, Language, Identifier, Creator, Subject, Description, Publisher,
-//    Contributor, Date, Type, Format, Source, Relation, Coverage, Rights
+//    Contributor, Date, Type, Format, Source, Relation, Coverage, Rights, Meta
 func (e Epub) Metadata(field string) ([]string, error) {
 	elem, ok := e.metadata[field]
 	if ok {
