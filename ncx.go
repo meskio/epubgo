@@ -5,7 +5,6 @@
 package epubgo
 
 import (
-	"encoding/xml"
 	"io"
 )
 
@@ -22,9 +21,8 @@ type content struct {
 }
 
 func parseNCX(ncx io.Reader) (*xmlNCX, error) {
-	decoder := xml.NewDecoder(ncx)
 	var n xmlNCX
-	err := decoder.Decode(&n)
+	err := decodeXml(ncx, &n)
 	if err != nil {
 		return nil, err
 	}

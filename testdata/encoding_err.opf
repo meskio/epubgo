@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no"?><package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="2.0">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+      <dc:title>Reviving</dc:title>
+      <dc:creator>Some Guy</dc:creator>
+      <dc:publisher>Press</dc:publisher>
+      <dc:format/>
+      <dc:date>NONE</dc:date>
+      <dc:subject/>
+      <dc:description/>
+      <dc:rights>NONE</dc:rights>
+      <dc:identifier id="bookid">1234567</dc:identifier>
+      <dc:language>en</dc:language>
+  </metadata>
+  <manifest>
+  </manifest>
+  <spine toc="ncx">
+  </spine>
+  <guide>
+  </guide>
+</package>

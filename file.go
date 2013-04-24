@@ -4,8 +4,11 @@
 
 package epubgo
 
+import _ "code.google.com/p/go-charset/data"
+
 import (
 	"archive/zip"
+	"code.google.com/p/go-charset/charset"
 	"encoding/xml"
 	"errors"
 	"io"
@@ -48,9 +51,14 @@ func getOpfPath(file *zip.Reader) (string, error) {
 	defer f.Close()
 
 	var c container_xml
-	decoder := xml.NewDecoder(f)
-	err = decoder.Decode(&c)
+	err = decodeXml(f, &c)
 	return c.Rootfile.Path, err
+}
+
+func decodeXml(file io.Reader, v interface{}) error {
+	decoder := xml.NewDecoder(file)
+	decoder.CharsetReader = charset.NewReader
+	return decoder.Decode(v)
 }
 
 func openFile(file *zip.Reader, path string) (io.ReadCloser, error) {

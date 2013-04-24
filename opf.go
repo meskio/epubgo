@@ -5,7 +5,6 @@
 package epubgo
 
 import (
-	"encoding/xml"
 	"errors"
 	"io"
 	"reflect"
@@ -76,9 +75,8 @@ type spineItem struct {
 }
 
 func parseOPF(opf io.Reader) (*xmlOPF, error) {
-	decoder := xml.NewDecoder(opf)
 	var o xmlOPF
-	err := decoder.Decode(&o)
+	err := decodeXml(opf, &o)
 	if err != nil {
 		return nil, err
 	}
