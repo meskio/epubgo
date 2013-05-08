@@ -76,9 +76,6 @@ func (e *Epub) parseFiles() (err error) {
 	}
 
 	e.metadata = e.opf.toMData()
-	if err != nil {
-		return
-	}
 	ncx, err := e.OpenFile(e.opf.ncxPath())
 	if err != nil {
 		return
