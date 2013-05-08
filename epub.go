@@ -76,9 +76,13 @@ func (e *Epub) parseFiles() (err error) {
 	}
 
 	e.metadata = e.opf.toMData()
-	ncx, err := e.OpenFile(e.opf.ncxPath())
+	ncxPath := e.opf.ncxPath()
+	if ncxPath == "" {
+		return errors.New("There is no NCX file on the epub")
+	}
+	ncx, err := e.OpenFile(ncxPath)
 	if err != nil {
-		return
+		return errors.New("Can't open the NCX file")
 	}
 	defer ncx.Close()
 	e.ncx, err = parseNCX(ncx)

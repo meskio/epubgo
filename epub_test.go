@@ -27,6 +27,7 @@ const (
 	meta_name         = "cover"
 	html_file         = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html"
 	html_path         = "3174/" + html_file
+	noNCX_path        = "testdata/noncx.epub"
 )
 
 func TestOpenClose(t *testing.T) {
@@ -80,6 +81,14 @@ func TestOpenFile(t *testing.T) {
 		t.Errorf("The files on zip and OpenFile are not equal")
 		return
 	}
+}
+
+func TestNoNCX(t *testing.T) {
+	f, err := Open(noNCX_path)
+	if err != nil {
+		t.Errorf("Open(%v) return an error: %v", noNCX_path, err)
+	}
+	f.Close()
 }
 
 func TestMetadata(t *testing.T) {
