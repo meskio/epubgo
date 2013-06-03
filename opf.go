@@ -36,7 +36,7 @@ type meta struct {
 }
 type identifier struct {
 	Data   string `xml:",chardata"`
-	Id     string `xml:"id,attr"`
+	ID     string `xml:"id,attr"`
 	Scheme string `xml:"scheme,attr"`
 }
 type author struct {
@@ -54,7 +54,7 @@ type metafield struct {
 	Content string `xml:"content,attr"`
 }
 type manifest struct {
-	Id           string `xml:"id,attr"`
+	ID           string `xml:"id,attr"`
 	Href         string `xml:"href,attr"`
 	MediaType    string `xml:"media-type,attr"`
 	Fallback     string `xml:"media-fallback,attr"`
@@ -62,21 +62,21 @@ type manifest struct {
 	MediaOverlay string `xml:"media-overlay,attr"`
 }
 type spine struct {
-	Id              string      `xml:"id,attr"`
+	ID              string      `xml:"id,attr"`
 	Toc             string      `xml:"toc,attr"`
 	PageProgression string      `xml:"page-progression-direction,attr"`
 	Items           []spineItem `xml:"itemref"`
 }
 type spineItem struct {
-	Idref      string `xml:"idref,attr"`
+	IDref      string `xml:"idref,attr"`
 	Linear     string `xml:"linear,attr"`
-	Id         string `xml:"id,attr"`
+	ID         string `xml:"id,attr"`
 	Properties string `xml:"properties,attr"`
 }
 
 func parseOPF(opf io.Reader) (*xmlOPF, error) {
 	var o xmlOPF
-	err := decodeXml(opf, &o)
+	err := decodeXML(opf, &o)
 	if err != nil {
 		return nil, err
 	}
@@ -85,18 +85,18 @@ func parseOPF(opf io.Reader) (*xmlOPF, error) {
 }
 
 func (opf xmlOPF) ncxPath() string {
-	var fileId string
+	var fileID string
 	if opf.Spine.Toc != "" {
-		fileId = opf.Spine.Toc
+		fileID = opf.Spine.Toc
 	} else {
-		fileId = "ncx"
+		fileID = "ncx"
 	}
-	return opf.filePath(fileId)
+	return opf.filePath(fileID)
 }
 
 func (opf xmlOPF) filePath(id string) string {
 	for _, item := range opf.Manifest {
-		if item.Id == id {
+		if item.ID == id {
 			return item.Href
 		}
 	}
@@ -133,7 +133,7 @@ func elementToMData(element interface{}) (result mdataElement) {
 	case identifier:
 		ident, _ := element.(identifier)
 		result.content = ident.Data
-		result.attr["id"] = ident.Id
+		result.attr["id"] = ident.ID
 		result.attr["scheme"] = ident.Scheme
 	case author:
 		auth, _ := element.(author)
@@ -157,17 +157,17 @@ func (opf xmlOPF) spineLength() int {
 	return len(opf.Spine.Items)
 }
 
-func (opf xmlOPF) spineUrl(index int) string {
-	idref := opf.Spine.Items[index].Idref
-	url, _ := opf.getUrl(idref)
+func (opf xmlOPF) spineURL(index int) string {
+	idref := opf.Spine.Items[index].IDref
+	url, _ := opf.getURL(idref)
 	return url
 }
 
-func (opf xmlOPF) getUrl(id string) (string, error) {
+func (opf xmlOPF) getURL(id string) (string, error) {
 	for _, item := range opf.Manifest {
-		if item.Id == id {
+		if item.ID == id {
 			return item.Href, nil
 		}
 	}
-	return "", errors.New("Id " + id + " not in the manifest")
+	return "", errors.New("ID " + id + " not in the manifest")
 }

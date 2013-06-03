@@ -9,7 +9,7 @@ import (
 	"io"
 )
 
-// Iterator on the epub pages spine
+// SpineIterator is an iterator on the epub pages spine
 //
 // With it is possible to navigate throw the pages of the epub.
 type SpineIterator struct {
@@ -29,17 +29,17 @@ func newSpineIterator(epub *Epub) (*SpineIterator, error) {
 	return &spine, nil
 }
 
-// Is it the first element of the book?
+// IsFirst returns whether the element is the first of the book
 func (spine SpineIterator) IsFirst() bool {
 	return spine.index == 0
 }
 
-// Is it the last element of the book?
+// IsLast returns whether the element is the last of the book
 func (spine SpineIterator) IsLast() bool {
 	return spine.index == spine.opf.spineLength()-1
 }
 
-// Advance the iterator to the next element on the spine
+// Next advances the iterator to the next element on the spine
 //
 // Returns an error if is the last
 func (spine *SpineIterator) Next() error {
@@ -50,7 +50,7 @@ func (spine *SpineIterator) Next() error {
 	return nil
 }
 
-// Step back the iterator to the previous element on the spine
+// Previous steps back the iterator to the previous element on the spine
 //
 // Returns an error if is the first
 func (spine *SpineIterator) Previous() error {
@@ -61,13 +61,13 @@ func (spine *SpineIterator) Previous() error {
 	return nil
 }
 
-// Open the file of the iterator
+// Open opens the file of the iterator
 func (spine SpineIterator) Open() (io.ReadCloser, error) {
-	url := spine.Url()
+	url := spine.URL()
 	return spine.epub.OpenFile(url)
 }
 
-// Get the url of the item on the iterator
-func (spine SpineIterator) Url() string {
-	return spine.opf.spineUrl(spine.index)
+// URL returns the url of the item on the iterator
+func (spine SpineIterator) URL() string {
+	return spine.opf.spineURL(spine.index)
 }

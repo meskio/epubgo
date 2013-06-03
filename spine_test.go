@@ -12,11 +12,11 @@ import (
 )
 
 const (
-	spine_url = "wrap0000.html"
+	spineURL = "wrap0000.html"
 )
 
 func TestFirst(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, err := f.Spine()
@@ -32,7 +32,7 @@ func TestFirst(t *testing.T) {
 }
 
 func TestLast(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Spine()
@@ -48,7 +48,7 @@ func TestLast(t *testing.T) {
 }
 
 func TestLastNext(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Spine()
@@ -61,7 +61,7 @@ func TestLastNext(t *testing.T) {
 }
 
 func TestMove(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Spine()
@@ -85,18 +85,18 @@ func TestMove(t *testing.T) {
 	}
 }
 
-func TestSpineUrl(t *testing.T) {
-	f, _ := Open(book_path)
+func TestSpineURL(t *testing.T) {
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Spine()
-	if it.Url() != spine_url {
-		t.Errorf("it.Url() return: %v when was expected: %v", it.Url(), spine_url)
+	if it.URL() != spineURL {
+		t.Errorf("it.URL() return: %v when was expected: %v", it.URL(), spineURL)
 	}
 }
 
 func TestSpineOpen(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Spine()
@@ -107,9 +107,9 @@ func TestSpineOpen(t *testing.T) {
 	}
 	defer html1.Close()
 
-	html2, err := f.OpenFile(it.Url())
+	html2, err := f.OpenFile(it.URL())
 	if err != nil {
-		t.Errorf("OpenFile(%v) return an error: %v", it.Url(), err)
+		t.Errorf("OpenFile(%v) return an error: %v", it.URL(), err)
 		return
 	}
 	defer html2.Close()

@@ -14,69 +14,69 @@ import (
 )
 
 const (
-	book_path         = "testdata/a_dogs_tale.epub"
-	book_title        = "A Dog's Tale"
-	book_lang         = "en"
-	book_identifier   = "http://www.gutenberg.org/ebooks/3174"
-	book_creator      = "Mark Twain"
-	book_subject      = "Dogs -- Fiction"
-	book_rights       = "Public domain in the USA."
-	len_metadafields  = 9
-	identifier_scheme = "URI"
-	creator_file_as   = "Twain, Mark"
-	meta_name         = "cover"
-	html_file         = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html"
-	html_path         = "3174/" + html_file
-	noNCX_path        = "testdata/noncx.epub"
+	bookPath          = "testdata/a_dogs_tale.epub"
+	bookTitle         = "A Dog's Tale"
+	bookLang          = "en"
+	bookIdentifier    = "http://www.gutenberg.org/ebooks/3174"
+	bookCreator       = "Mark Twain"
+	bookSubject       = "Dogs -- Fiction"
+	bookRights        = "Public domain in the USA."
+	lenMetadatafields = 9
+	identifierScheme  = "URI"
+	creatorFileAs     = "Twain, Mark"
+	metaName          = "cover"
+	htmlFile          = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html"
+	htmlPath          = "3174/" + htmlFile
+	noNCXPath         = "testdata/noncx.epub"
 )
 
 func TestOpenClose(t *testing.T) {
-	f, err := Open(book_path)
+	f, err := Open(bookPath)
 	if err != nil {
-		t.Errorf("Open(%v) return an error: %v", book_path, err)
+		t.Errorf("Open(%v) return an error: %v", bookPath, err)
 	}
 
 	f.Close()
 }
 
 func TestLoad(t *testing.T) {
-	file, _ := os.Open(book_path)
+	file, _ := os.Open(bookPath)
 	fileInfo, _ := file.Stat()
 	f, err := Load(file, fileInfo.Size())
 	if err != nil {
-		t.Errorf("Open(%v) return an error: %v", book_path, err)
+		t.Errorf("Open(%v) return an error: %v", bookPath, err)
 	}
 
 	f.Close()
 }
 
 func TestOpenFile(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
-	html, err := f.OpenFile(html_file)
+	html, err := f.OpenFile(htmlFile)
 	if err != nil {
-		t.Errorf("OpenFile(%v) return an error: %v", html_file, err)
+		t.Errorf("OpenFile(%v) return an error: %v", htmlFile, err)
 		return
 	}
 	defer html.Close()
 
-	zipFile, _ := zip.OpenReader(book_path)
+	zipFile, _ := zip.OpenReader(bookPath)
 	defer zipFile.Close()
 	var file *zip.File
 	for _, file = range zipFile.Reader.File {
-		if file.Name == html_path {
+		if file.Name == htmlPath {
 			break
 		}
 	}
-	zipHtml, _ := file.Open()
+	zipHTML, _ := file.Open()
 
 	buff1, err := ioutil.ReadAll(html)
 	if err != nil {
 		t.Errorf("Error reading the opened file: %v", err)
 		return
 	}
-	buff2, _ := ioutil.ReadAll(zipHtml)
+	buff2, _ := ioutil.ReadAll(zipHTML)
 	if !bytes.Equal(buff1, buff2) {
 		t.Errorf("The files on zip and OpenFile are not equal")
 		return
@@ -84,44 +84,44 @@ func TestOpenFile(t *testing.T) {
 }
 
 func TestNoNCX(t *testing.T) {
-	f, err := Open(noNCX_path)
+	f, err := Open(noNCXPath)
 	if err != nil {
-		t.Errorf("Open(%v) return an error: %v", noNCX_path, err)
+		t.Errorf("Open(%v) return an error: %v", noNCXPath, err)
 	}
 	f.Close()
 }
 
 func TestMetadata(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
-	if title, _ := f.Metadata("title"); title[0] != book_title {
-		t.Errorf("Metadata title '%v', the expected was '%v'", title[0], book_title)
+	if title, _ := f.Metadata("title"); title[0] != bookTitle {
+		t.Errorf("Metadata title '%v', the expected was '%v'", title[0], bookTitle)
 	}
-	if language, _ := f.Metadata("language"); language[0] != book_lang {
-		t.Errorf("Metadata language '%v', the expected was '%v'", language[0], book_lang)
+	if language, _ := f.Metadata("language"); language[0] != bookLang {
+		t.Errorf("Metadata language '%v', the expected was '%v'", language[0], bookLang)
 	}
-	if identifier, _ := f.Metadata("identifier"); identifier[0] != book_identifier {
-		t.Errorf("Metadata identifier '%v', the expected was '%v'", identifier[0], book_identifier)
+	if identifier, _ := f.Metadata("identifier"); identifier[0] != bookIdentifier {
+		t.Errorf("Metadata identifier '%v', the expected was '%v'", identifier[0], bookIdentifier)
 	}
-	if creator, _ := f.Metadata("creator"); creator[0] != book_creator {
-		t.Errorf("Metadata creator '%v', the expected was '%v'", creator[0], book_creator)
+	if creator, _ := f.Metadata("creator"); creator[0] != bookCreator {
+		t.Errorf("Metadata creator '%v', the expected was '%v'", creator[0], bookCreator)
 	}
-	if subject, _ := f.Metadata("subject"); subject[0] != book_subject {
-		t.Errorf("Metadata subject '%v', the expected was '%v'", subject[0], book_subject)
+	if subject, _ := f.Metadata("subject"); subject[0] != bookSubject {
+		t.Errorf("Metadata subject '%v', the expected was '%v'", subject[0], bookSubject)
 	}
-	if rights, _ := f.Metadata("rights"); rights[0] != book_rights {
-		t.Errorf("Metadata rights '%v', the expected was '%v'", rights[0], book_rights)
+	if rights, _ := f.Metadata("rights"); rights[0] != bookRights {
+		t.Errorf("Metadata rights '%v', the expected was '%v'", rights[0], bookRights)
 	}
 }
 
 func TestMetadataFields(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	fields := f.MetadataFields()
-	if len(fields) != len_metadafields {
-		t.Errorf("len(MetadataFields()) should be %v, but was %v", len_metadafields, len(fields))
+	if len(fields) != lenMetadatafields {
+		t.Errorf("len(MetadataFields()) should be %v, but was %v", lenMetadatafields, len(fields))
 	}
 
 	isTitle := false
@@ -136,16 +136,16 @@ func TestMetadataFields(t *testing.T) {
 }
 
 func TestMetadataAttr(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
-	if identifier, _ := f.MetadataAttr("identifier"); identifier[0]["scheme"] != identifier_scheme {
-		t.Errorf("Metadata identifier attr scheme '%v', the expected was '%v'", identifier[0]["scheme"], identifier_scheme)
+	if identifier, _ := f.MetadataAttr("identifier"); identifier[0]["scheme"] != identifierScheme {
+		t.Errorf("Metadata identifier attr scheme '%v', the expected was '%v'", identifier[0]["scheme"], identifierScheme)
 	}
-	if creator, _ := f.MetadataAttr("creator"); creator[0]["file-as"] != creator_file_as {
-		t.Errorf("Metadata creator attr file-as '%v', the expected was '%v'", creator[0]["file-as"], creator_file_as)
+	if creator, _ := f.MetadataAttr("creator"); creator[0]["file-as"] != creatorFileAs {
+		t.Errorf("Metadata creator attr file-as '%v', the expected was '%v'", creator[0]["file-as"], creatorFileAs)
 	}
-	if meta, _ := f.MetadataAttr("meta"); meta[0]["name"] != meta_name {
-		t.Errorf("Metadata meta attr name '%v', the expected was '%v'", meta[0]["name"], meta_name)
+	if meta, _ := f.MetadataAttr("meta"); meta[0]["name"] != metaName {
+		t.Errorf("Metadata meta attr name '%v', the expected was '%v'", meta[0]["name"], metaName)
 	}
 }

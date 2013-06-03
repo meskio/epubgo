@@ -11,15 +11,15 @@ import (
 )
 
 const (
-	encoding_opf = "testdata/encoding_err.opf"
+	encodingOpf = "testdata/encoding_err.opf"
 )
 
 func TestEncodingError(t *testing.T) {
-	file, _ := os.Open(encoding_opf)
+	file, _ := os.Open(encodingOpf)
 	defer file.Close()
 
 	_, err := parseOPF(file)
 	if err != nil {
-		t.Errorf("parseOpf(%v) with encoding problems return an error: %v", encoding_opf, err)
+		t.Errorf("parseOpf(%v) with encoding problems return an error: %v", encodingOpf, err)
 	}
 }

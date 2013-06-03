@@ -22,7 +22,7 @@ type content struct {
 
 func parseNCX(ncx io.Reader) (*xmlNCX, error) {
 	var n xmlNCX
-	err := decodeXml(ncx, &n)
+	err := decodeXML(ncx, &n)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (point navpoint) Title() string {
 	return point.Text
 }
 
-func (point navpoint) Url() string {
+func (point navpoint) URL() string {
 	return point.Content.Src
 }
 

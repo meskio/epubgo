@@ -3,7 +3,7 @@
 // version 3 or later that can be found in the LICENSE file.
 
 /*
-Package epub implements reading for epub ebook format.
+Package epubgo implements reading for epub ebook format.
 
 A simple example of usage:
 	book, err := epub.Open("path/of/the/file.epub")

@@ -7,13 +7,13 @@ package epubgo
 import "testing"
 
 const (
-	first_title = "A DOG'S TALE, By Mark Twain"
-	first_url   = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html#pgepubid00000"
-	child_title = "Frontpiece"
+	firstTitle = "A DOG'S TALE, By Mark Twain"
+	firstURL   = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html#pgepubid00000"
+	childTitle = "Frontpiece"
 )
 
 func TestIterator(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, err := f.Navigation()
@@ -35,27 +35,27 @@ func TestIterator(t *testing.T) {
 }
 
 func TestTitle(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Navigation()
-	if it.Title() != first_title {
-		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), first_title)
+	if it.Title() != firstTitle {
+		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), firstTitle)
 	}
 }
 
-func TestUrl(t *testing.T) {
-	f, _ := Open(book_path)
+func TestURL(t *testing.T) {
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Navigation()
-	if it.Url() != first_url {
-		t.Errorf("it.Url() return: %v when was expected: %v", it.Url(), first_url)
+	if it.URL() != firstURL {
+		t.Errorf("it.URL() return: %v when was expected: %v", it.URL(), firstURL)
 	}
 }
 
 func TestDepth(t *testing.T) {
-	f, _ := Open(book_path)
+	f, _ := Open(bookPath)
 	defer f.Close()
 
 	it, _ := f.Navigation()
@@ -83,8 +83,8 @@ func TestDepth(t *testing.T) {
 	if err := it.Previous(); err != nil {
 		t.Errorf("it.Previous() return an error: %v", err)
 	}
-	if it.Title() != child_title {
-		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), child_title)
+	if it.Title() != childTitle {
+		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), childTitle)
 	}
 	if err := it.Out(); err != nil {
 		t.Errorf("it.Out() return an error: %v", err)
@@ -95,7 +95,7 @@ func TestDepth(t *testing.T) {
 	if err := it.Previous(); err != nil {
 		t.Errorf("it.Next() return an error: %v", err)
 	}
-	if it.Title() != first_title {
-		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), first_title)
+	if it.Title() != firstTitle {
+		t.Errorf("it.Title() return: %v when was expected: %v", it.Title(), firstTitle)
 	}
 }

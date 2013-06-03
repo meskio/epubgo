@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-type container_xml struct {
+type containerXML struct {
 	// FIXME: only support for one rootfile, can it be more than one?
 	Rootfile rootfile `xml:"rootfiles>rootfile"`
 }
@@ -50,12 +50,12 @@ func getOpfPath(file *zip.Reader) (string, error) {
 	}
 	defer f.Close()
 
-	var c container_xml
-	err = decodeXml(f, &c)
+	var c containerXML
+	err = decodeXML(f, &c)
 	return c.Rootfile.Path, err
 }
 
-func decodeXml(file io.Reader, v interface{}) error {
+func decodeXML(file io.Reader, v interface{}) error {
 	decoder := xml.NewDecoder(file)
 	decoder.CharsetReader = charset.NewReader
 	return decoder.Decode(v)

@@ -27,7 +27,7 @@ type mdataElement struct {
 	attr    map[string]string
 }
 
-// Open an existing epub
+// Open opens an existing epub
 func Open(path string) (e *Epub, err error) {
 	e = new(Epub)
 	e.file, err = os.Open(path)
@@ -42,7 +42,7 @@ func Open(path string) (e *Epub, err error) {
 	return
 }
 
-// Load an epub from an io.ReaderAt
+// Load loads an epub from an io.ReaderAt
 func Load(r io.ReaderAt, size int64) (e *Epub, err error) {
 	e = new(Epub)
 	e.file = nil
@@ -89,29 +89,29 @@ func (e *Epub) parseFiles() (err error) {
 	return
 }
 
-// Close the epub file
+// Close closes the epub file
 func (e Epub) Close() {
 	if e.file != nil {
 		e.file.Close()
 	}
 }
 
-// Open a file inside the epub
+// OpenFile opens a file inside the epub
 func (e Epub) OpenFile(name string) (io.ReadCloser, error) {
 	return openFile(e.zip, e.rootPath+name)
 }
 
-// Get a navigation iterator
+// Navigation returns a navigation iterator
 func (e Epub) Navigation() (*NavigationIterator, error) {
 	return newNavigationIterator(e.ncx.navMap())
 }
 
-// Get a spine iterator
+// Spine returns a spine iterator
 func (e Epub) Spine() (*SpineIterator, error) {
 	return newSpineIterator(&e)
 }
 
-// Get the values of a metadata field
+// Metadata returns the values of a metadata field
 //
 // The valid field names are:
 //    Title, Language, Identifier, Creator, Subject, Description, Publisher,
@@ -129,7 +129,7 @@ func (e Epub) Metadata(field string) ([]string, error) {
 	return nil, errors.New("Field " + field + " don't exists")
 }
 
-// Get the list of metadata fields pressent on the current epub
+// MetadataFields retunrs the list of metadata fields pressent on the current epub
 func (e Epub) MetadataFields() []string {
 	fields := make([]string, len(e.metadata))
 	i := 0
@@ -140,7 +140,7 @@ func (e Epub) MetadataFields() []string {
 	return fields
 }
 
-// Get the metadata attributes
+// MetadataAttr returns the metadata attributes
 //
 // Returns: an array of maps of each attribute and it's value.
 // The array has the fields on the same order than the Metadata method.
