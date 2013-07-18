@@ -26,6 +26,7 @@ const (
 	creatorFileAs     = "Twain, Mark"
 	metaName          = "cover"
 	htmlFile          = "@public@vhost@g@gutenberg@html@files@3174@3174-h@3174-h-0.htm.html"
+	fileId            = "item8"
 	htmlPath          = "3174/" + htmlFile
 	noNCXPath         = "testdata/noncx.epub"
 )
@@ -57,6 +58,39 @@ func TestOpenFile(t *testing.T) {
 	html, err := f.OpenFile(htmlFile)
 	if err != nil {
 		t.Errorf("OpenFile(%v) return an error: %v", htmlFile, err)
+		return
+	}
+	defer html.Close()
+
+	zipFile, _ := zip.OpenReader(bookPath)
+	defer zipFile.Close()
+	var file *zip.File
+	for _, file = range zipFile.Reader.File {
+		if file.Name == htmlPath {
+			break
+		}
+	}
+	zipHTML, _ := file.Open()
+
+	buff1, err := ioutil.ReadAll(html)
+	if err != nil {
+		t.Errorf("Error reading the opened file: %v", err)
+		return
+	}
+	buff2, _ := ioutil.ReadAll(zipHTML)
+	if !bytes.Equal(buff1, buff2) {
+		t.Errorf("The files on zip and OpenFile are not equal")
+		return
+	}
+}
+
+func TestOpenFileId(t *testing.T) {
+	f, _ := Open(bookPath)
+	defer f.Close()
+
+	html, err := f.OpenFileId(fileId)
+	if err != nil {
+		t.Errorf("OpenFileId(%v) return an error: %v", fileId, err)
 		return
 	}
 	defer html.Close()

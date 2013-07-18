@@ -101,6 +101,14 @@ func (e Epub) OpenFile(name string) (io.ReadCloser, error) {
 	return openFile(e.zip, e.rootPath+name)
 }
 
+// OpenFileId opens a file from it's id
+//
+// The id of the files often appears on metadata fields
+func (e Epub) OpenFileId(id string) (io.ReadCloser, error) {
+	path := e.opf.filePath(id)
+	return openFile(e.zip, e.rootPath+path)
+}
+
 // Navigation returns a navigation iterator
 func (e Epub) Navigation() (*NavigationIterator, error) {
 	return newNavigationIterator(e.ncx.navMap())
