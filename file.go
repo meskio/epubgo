@@ -57,6 +57,7 @@ func getOpfPath(file *zip.Reader) (string, error) {
 
 func decodeXML(file io.Reader, v interface{}) error {
 	decoder := xml.NewDecoder(file)
+	decoder.Entity = xml.HTMLEntity
 	decoder.CharsetReader = charset.NewReader
 	return decoder.Decode(v)
 }
