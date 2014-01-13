@@ -12,7 +12,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"io"
-	"strings"
+	"path"
 )
 
 type containerXML struct {
@@ -36,11 +36,12 @@ func getRootPath(file *zip.Reader) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	index := strings.LastIndex(opfPath, "/")
-	if index == -1 {
+	pathDir := path.Dir(opfPath)
+	if pathDir == "." {
 		return "", nil
+	} else {
+		return path.Dir(opfPath) + "/", nil
 	}
-	return opfPath[:index+1], nil
 }
 
 func getOpfPath(file *zip.Reader) (string, error) {
