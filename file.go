@@ -13,6 +13,7 @@ import (
 	"errors"
 	"io"
 	"path"
+	"strings"
 )
 
 type containerXML struct {
@@ -69,5 +70,13 @@ func openFile(file *zip.Reader, path string) (io.ReadCloser, error) {
 			return f.Open()
 		}
 	}
+
+	pathLower := strings.ToLower(path)
+	for _, f := range file.File {
+		if strings.ToLower(f.Name) == pathLower {
+			return f.Open()
+		}
+	}
+
 	return nil, errors.New("File " + path + " not found")
 }
