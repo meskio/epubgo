@@ -85,12 +85,15 @@ func parseOPF(opf io.Reader) (*xmlOPF, error) {
 }
 
 func (opf xmlOPF) ncxPath() string {
-	var fileID string
 	if opf.Spine.Toc != "" {
-		fileID = opf.Spine.Toc
-	} else {
-		fileID = "ncx"
+		fileID := opf.Spine.Toc
+		path := opf.filePath(fileID)
+		if path != "" {
+			return path
+		}
 	}
+
+	fileID := "ncx"
 	return opf.filePath(fileID)
 }
 

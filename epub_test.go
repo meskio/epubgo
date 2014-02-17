@@ -29,6 +29,7 @@ const (
 	fileId            = "item8"
 	htmlPath          = "3174/" + htmlFile
 	noNCXPath         = "testdata/noncx.epub"
+	invalidNCXPath    = "testdata/invalidncx.epub"
 )
 
 func TestOpenClose(t *testing.T) {
@@ -121,6 +122,14 @@ func TestNoNCX(t *testing.T) {
 	f, err := Open(noNCXPath)
 	if err != nil {
 		t.Errorf("Open(%v) return an error: %v", noNCXPath, err)
+	}
+	f.Close()
+}
+
+func TestInvalidNCX(t *testing.T) {
+	f, err := Open(invalidNCXPath)
+	if err != nil {
+		t.Errorf("Open(%v) return an error: %v", invalidNCXPath, err)
 	}
 	f.Close()
 }
