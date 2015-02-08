@@ -77,15 +77,14 @@ func (e *Epub) parseFiles() (err error) {
 
 	e.metadata = e.opf.toMData()
 	ncxPath := e.opf.ncxPath()
-	if ncxPath == "" {
-		return errors.New("There is no NCX file on the epub")
+	if ncxPath != "" {
+		ncx, err := e.OpenFile(ncxPath)
+		if err != nil {
+			return errors.New("Can't open the NCX file")
+		}
+		defer ncx.Close()
+		e.ncx, err = parseNCX(ncx)
 	}
-	ncx, err := e.OpenFile(ncxPath)
-	if err != nil {
-		return errors.New("Can't open the NCX file")
-	}
-	defer ncx.Close()
-	e.ncx, err = parseNCX(ncx)
 	return
 }
 
@@ -111,6 +110,9 @@ func (e Epub) OpenFileId(id string) (io.ReadCloser, error) {
 
 // Navigation returns a navigation iterator
 func (e Epub) Navigation() (*NavigationIterator, error) {
+	if e.ncx == nil {
+		return nil, errors.New("There is no NCX file on the epub")
+	}
 	return newNavigationIterator(e.ncx.navMap())
 }
 
