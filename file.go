@@ -4,13 +4,11 @@
 
 package epubgo
 
-import _ "code.google.com/p/go-charset/data"
-
 import (
 	"archive/zip"
-	"code.google.com/p/go-charset/charset"
 	"encoding/xml"
 	"errors"
+	"golang.org/x/net/html/charset"
 	"io"
 	"path"
 	"strings"
@@ -60,7 +58,7 @@ func getOpfPath(file *zip.Reader) (string, error) {
 func decodeXML(file io.Reader, v interface{}) error {
 	decoder := xml.NewDecoder(file)
 	decoder.Entity = xml.HTMLEntity
-	decoder.CharsetReader = charset.NewReader
+	decoder.CharsetReader = charset.NewReaderLabel
 	return decoder.Decode(v)
 }
 
